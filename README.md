@@ -17,7 +17,13 @@ npm run dev
 
 Open the local URL printed in the terminal (normally http://localhost:3000). Keep the terminal running while using the app; press Ctrl+C to stop it. This React app needs a server, so there is no standalone `index.html` to double-click.
 
-The repository is public and contains the application source. Pushing it to GitHub does not automatically deploy a public website. The existing hosted app is at https://rfq-data-journey-kevin.kbtabora.chatgpt.site and may require its owner's ChatGPT sign-in.
+## Public website
+
+Open https://kevintabora.github.io/mban-case/ to use the app without installing anything or signing in.
+
+The GitHub Pages build reuses the same React app and runs entirely in the browser. To publish changes, run `npm run build:pages`, commit the updated source and `docs` folder, and push to `main`. GitHub Pages publishes from `main` → `/docs`. The build sets the `/mban-case/` asset prefix and includes `.nojekyll` so GitHub serves the app instead of rendering this README.
+
+The original Sites build remains available through `npm run build`.
 
 `npm run build` creates the production site. Implementation is React with semantic HTML, CSS, and client-side JavaScript compiled from TypeScript. No model API or external data service is required by the lessons. No uploads, personal data, or persistent user records are used.
 
