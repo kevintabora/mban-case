@@ -57,14 +57,14 @@ const stages = [
   'What the paper found',
 ];
 const leads = [
-  'A request begins as an email. Select a quote line to highlight its customer, part, and candidate order records.',
-  'A join brings related records together. Change the matching rules and watch the learning row change.',
-  'A tidy-looking table can still teach the wrong lesson. Turn cleaning rules on and off to see their exact effects.',
-  'Features are clues made from records. Inspect the arithmetic, then see how categories become model inputs.',
-  'Practice on some rows and test on others. This small, working tree ensemble makes the learning steps visible.',
-  'A score becomes a prediction only after you choose a cut-off. Move it and see which mistakes change.',
-  'The model needs fields, but the customer sends words. Try a message and inspect what a dictionary matcher sees.',
-  'These are the paper’s findings. The interactive examples elsewhere are teaching models, not a reproduction of its experiments.',
+  'Imagine you are beside a sales employee as a customer’s email arrives: “Can you quote these spare parts?” Preparing a quote takes work, and a request may never become a sale. Before an analyst can help the team decide which requests deserve attention, they must find out what the company recorded. Start with the email below, then follow one offered part through the separate tables.',
+  'The analyst now has the files, but each tells only part of the story. The quote table says what was offered; the customer and part files describe who and what; the order table records what was bought. The next job is to bring those pieces together and ask: did this offered item lead to a sale? Change the matching rules below to see why that answer needs care.',
+  'The records are connected, but the analyst is not ready to trust them. One line appears twice, some cells are blank, and a suspiciously large amount needs checking. Simply deleting everything unusual could throw away useful evidence. Work through the cleaning rules below as if you were reviewing the export with the staff who know how the records were created.',
+  'With the records checked, the analyst asks what the sales team could have known when each request arrived. A customer’s earlier buying history might help; a sale that happens next month cannot. This step turns the available history into a few useful clues, called features. Follow how several old records become single cells in the row the model will read.',
+  'The analyst has prepared the clues and found the historical answers. Now it is time to learn a pattern: which combinations of clues tend to appear beside a sale? For this lesson, we switch to a separate set of 20 invented examples so you can inspect every row. The analyst lets a small group of trees practice on some examples while keeping others aside for a fair test.',
+  'The trees have finished practicing. Now the analyst opens the answers that were kept aside and checks the predictions against what actually happened. But the sales team needs more than a score: it needs a way to decide which requests to consider first. Move the cut-off below and watch how a stricter or more generous selection changes both the opportunities found and the mistakes made.',
+  'So far, the analyst has worked with neatly arranged historical rows. Back at the sales desk, the next request arrives as an email, with part numbers mixed into ordinary sentences. Before a model could score it, someone must identify the customer and the requested parts. Try the small dictionary matcher below to see how text can become a proposed table—and where a staff member still needs to check it.',
+  'We have followed an imagined request from the inbox to a prediction. Now we step back from the teaching examples and ask what the researchers actually found. Their study used far more records and a full Random Forest. Read the results below as evidence about selecting promising historical quote lines, then consider what the team would still need to prove in daily use.',
 ];
 const sources = [
   '§§3.1.1–3.1.2 · pp. 3–4',
@@ -475,7 +475,7 @@ export default function Home() {
                 </section>
                 <Grid
                   title="Quote-line table"
-                  note="One row = one offered part. Choose a line ID."
+                  note="The employee records each offered part on its own line. One email can therefore create several rows. Choose a line ID to follow that item."
                   rows={lines}
                   active={(r) => r.line === lineId}
                   onPick={pick}
@@ -484,20 +484,20 @@ export default function Home() {
               <div className="two-col">
                 <Grid
                   title="Customer master"
-                  note="One row = one account. Account C is absent in this deliberately incomplete file."
+                  note="The analyst looks up the customer by account ID instead of repeating their details on every quote. Each row describes one account; C is deliberately missing from this file."
                   rows={customers}
                   active={(r) => r.account === line.account}
                 />
                 <Grid
                   title="Part master"
-                  note="One row = one part. NULL means no value was stored."
+                  note="The part ID leads to a separate description of the item. Each row describes one part. A NULL cell means the file contains no value there; it does not mean zero."
                   rows={parts}
                   active={(r) => r.part === line.part}
                 />
               </div>
               <Grid
                 title="Sales-order table"
-                note="These records have no quote-line ID. Green rows share the selected account and part; time and sales type still need checking."
+                note="Later, a purchase creates an order record. Unfortunately, these records do not name the original quote line. Green rows share its account and part, giving the analyst possible matches to investigate next."
                 rows={orders}
                 active={(r) =>
                   r.account === line.account && r.part === line.part
@@ -513,10 +513,14 @@ export default function Home() {
               />
               <Note title="A row is not always the same thing">
                 <p>
-                  R1 is one request, L01 is one offered item, and O1 is one
-                  order line. Joining tables without respecting those units can
-                  multiply counts. IDs identify records; their digits are not
-                  useful measurements.
+                  Follow R1: the customer sends one request, but the employee
+                  offers two items, recorded as L01 and L02. If an item is later
+                  purchased, that purchase appears in the order table, with its
+                  own ID such as O1. These are different events, so counting
+                  emails, quote lines, and order lines answers different
+                  questions. The analyst keeps those units clear before
+                  connecting the files. IDs help find the records; their digits
+                  do not measure how likely a sale is.
                 </p>
               </Note>
             </>
@@ -548,7 +552,7 @@ export default function Home() {
                 <Grid title="Selected quote line" rows={[line]} />
                 <Grid
                   title="Matching customer + part"
-                  note="These are lookup joins on their IDs."
+                  note="Using the selected line’s account and part IDs, the analyst copies the matching descriptive fields into one view. This lookup is the first part of the join."
                   rows={[
                     {
                       account: line.account,
@@ -635,10 +639,14 @@ export default function Home() {
                   revenue adds their values separately.
                 </p>
                 <p>
-                  An inner customer join hides L04 because C is absent. A left
-                  join keeps L04 and exposes NULL fields. If several quotes
-                  could match one order, a real system needs ambiguity review.
-                  These small examples do not resolve that problem.
+                  Next, the analyst checks whether connecting the files has
+                  quietly lost a request. Try L04 and turn on the inner customer
+                  join: it disappears because account C is absent from the
+                  customer file. A left join keeps the quote and shows the
+                  missing details as NULL. There is another question for staff:
+                  could one order belong to several earlier quotes? A real
+                  system needs a review rule for that ambiguity; this small
+                  exercise does not settle it.
                 </p>
               </Note>
               <details className="panel">
@@ -708,27 +716,40 @@ export default function Home() {
               <div className="two-col">
                 <Note title="The dangerous shortcut">
                   <p>
-                    L04 has no customer fields after the sales-only master
-                    lookup, and its mature label is “No sale.” The model could
-                    learn <b>“blank means no sale”</b> from how the file was
-                    created.
+                    Imagine the analyst asking why L04 has no customer details.
+                    In this example, the lookup file contains only customers
+                    with sales. L04’s mature outcome is “No sale,” so the
+                    missing details can accidentally reveal the answer. A model
+                    might learn <b>“blank means no sale”</b> instead of learning
+                    a useful pattern about a new request.
                   </p>
                   <p>
-                    That is leakage: an accidental answer clue. Toggle removal
-                    and watch L04 leave. It does not mean every blank in real
-                    life predicts no sale.
+                    This is called leakage: information about the answer has
+                    slipped into the clues. Turn on removal to see how excluding
+                    this affected row changes the dataset. The reason matters:
+                    the analyst is addressing how this file was made, not
+                    assuming that every blank in real life means a lost sale.
                   </p>
                 </Note>
                 <section className="panel">
                   <h2>Different kinds of missing</h2>
                   <p>
-                    <b>MCAR:</b> absence is unrelated to the data values.
+                    <b>MCAR — missing completely at random:</b> imagine an
+                    accidental loss of cells unrelated to any record’s values.
+                    The analyst cannot explain the gaps using those values.
                   </p>
                   <p>
-                    <b>MAR:</b> absence can depend on observed information.
+                    <b>MAR — missing at random:</b> the gaps may be related to
+                    information that is recorded. For example, one recorded
+                    supplier group might use a form that leaves price blank.
+                    After accounting for the observed information, missingness
+                    does not depend on the missing value itself.
                   </p>
                   <p>
-                    <b>MNAR:</b> absence depends on unobserved information.
+                    <b>MNAR — missing not at random:</b> even after considering
+                    the recorded information, the gaps depend on something
+                    unobserved. Imagine unusually high prices being withheld
+                    because they are high. The missingness itself is selective.
                   </p>
                   <p className="annotation">
                     We assume Price is MAR and Supplier is MNAR only for this
@@ -740,11 +761,12 @@ export default function Home() {
               <section className="panel">
                 <h2>What about that 999,999?</h2>
                 <p>
-                  L07’s quoted amount looks suspicious. A value being large does
-                  not prove it is wrong. The paper used a
-                  three-standard-deviation training-data rule and checked
-                  flagged entries. Quoted amount here is an audit example, not a
-                  prediction-time feature.
+                  The analyst pauses at L07’s quoted amount: 999,999. Was this a
+                  typing error or an unusually large quote? The number alone
+                  cannot answer that, so it needs checking rather than automatic
+                  deletion. The paper used a three-standard-deviation
+                  training-data rule and checked flagged entries. Quoted amount
+                  here is an audit example, not a prediction-time feature.
                 </p>
                 <p>
                   Outlier rules and resampling belong inside training
@@ -802,14 +824,18 @@ export default function Home() {
                     {hist.quoted ? pct(hist.hitRate) : 'No history'}
                   </div>
                   <p>
-                    Sold quoted value ÷ total quoted value. This is value-based,
-                    not a count of successful RFQs.
+                    The analyst adds the quoted value that turned into sales,
+                    then divides by all quoted value in the available history.
+                    This asks how much of the offered value became business. It
+                    is value-based, so it differs from counting how many
+                    requests succeeded.
                   </p>
                   <h3>Customer frequency = {hist.frequency}</h3>
                   <p>
-                    Sum the historical order-line appearances. H1 contributes
-                    two appearances, not one, despite occupying one summary row
-                    here.
+                    Next, the analyst counts the customer’s historical
+                    order-line appearances. Notice that H1 already summarizes
+                    two appearances. Counting H1 as just one because it occupies
+                    one row here would lose part of that history.
                   </p>
                   <p className="annotation">
                     Future H6 changes A’s history. Select L01 and toggle future
@@ -842,9 +868,12 @@ export default function Home() {
                 <section className="panel">
                   <h2>Categories become flags</h2>
                   <p>
-                    Airline and Broker are names, not amounts. One-hot encoding
-                    makes yes/no columns. Government is the reference category
-                    here: both flags are zero.
+                    The analyst also wants the model to use customer type.
+                    Calling Airline “1” and Broker “2” could suggest a numeric
+                    order that does not exist. Instead, one-hot encoding asks
+                    separate yes/no questions: is this an airline? Is it a
+                    broker? Government is the reference category here, so both
+                    flags are zero for that known type.
                   </p>
                   <p>
                     A missing type also gives zero flags in this simple display,
@@ -883,11 +912,13 @@ export default function Home() {
               </div>
               <Note title="X is clues. y is the answer.">
                 <p>
-                  Training pairs a feature matrix <b>X</b> with historical
-                  labels <b>y</b>. At arrival, a new row has X but no observed
-                  y. A model predicts; the business must later record the real
-                  outcome. Primary IDs link records; useful derived categories
-                  or histories become features.
+                  The analyst now has two things to keep separate. <b>X</b> is
+                  the table of clues available at the time of a request;
+                  <b> y</b> is the later answer, sale or no sale. Historical
+                  examples have both, which lets the model learn. A new request
+                  has only the clues. The model must predict its answer, and the
+                  staff must later record what really happened. That is the
+                  handoff from preparing data to training a model.
                 </p>
               </Note>
             </>
@@ -955,6 +986,14 @@ export default function Home() {
               </div>
               <section className="panel">
                 <h2>Keep the test answers sealed</h2>
+                <p>
+                  Think of the analyst dividing a workbook into practice pages
+                  and an exam. Each letter below marks one group, called a fold.
+                  The chosen fold is the exam: its answers must not influence
+                  what the trees learn. Switching folds gives a different group
+                  a turn as the exam, with the remaining groups used for
+                  practice.
+                </p>
                 <div className="chips">
                   {samples.map((s) => (
                     <span
@@ -1003,7 +1042,7 @@ export default function Home() {
               <div className="two-col">
                 <Grid
                   title="Training matrix + labels"
-                  note="Only these rows influence the fitted split points."
+                  note="These are the practice examples. The learner can see both the clues and the answers, and uses them to choose where each tree splits."
                   rows={model.training.map((s) => ({
                     id: s.id,
                     ...Object.fromEntries(features.map((f) => [f, s[f]])),
@@ -1012,7 +1051,7 @@ export default function Home() {
                 />
                 <Grid
                   title="Held-out inputs"
-                  note="Labels are hidden here. Step 6 reveals them for evaluation."
+                  note="These are the exam examples. The trees receive the clues, but their answers stayed out of training. In the next step, the analyst reveals them to check the predictions."
                   rows={model.test.map((s) => ({
                     id: s.id,
                     ...Object.fromEntries(features.map((f) => [f, s[f]])),
@@ -1034,6 +1073,14 @@ export default function Home() {
               <div className="two-col">
                 <section className="panel">
                   <h2>Class mix</h2>
+                  <p>
+                    The practice pile contains more non-sales than sales. The
+                    analyst can set aside some non-sale examples so the learner
+                    gets a more balanced practice set. This is undersampling.
+                    Toggle it above and compare the bars. The test pile keeps
+                    its original mix, so the exam is not made easier by
+                    balancing it.
+                  </p>
                   <Bars
                     max={16}
                     rows={[
@@ -1060,10 +1107,13 @@ export default function Home() {
                 </section>
                 <Note title="What is actually running here?">
                   <p>
-                    For each tree, the lab tries cut-offs between observed
-                    training values, picks the greatest Gini improvement, and
-                    predicts the majority class on each side. The ensemble
-                    averages its binary votes.
+                    A small tree is learning one question, such as whether a hit
+                    rate is below a certain value. The lab tries cut-offs
+                    between the observed training values and chooses the one
+                    that best separates sales from non-sales. That improvement
+                    is measured by Gini gain. On each side, the tree predicts
+                    whichever answer is more common there. The group, or
+                    ensemble, then averages the trees’ sale/no-sale votes.
                   </p>
                   <p>
                     For variety, trees cycle through enabled features and
@@ -1099,6 +1149,15 @@ export default function Home() {
               <div className="two-col">
                 <section className="panel">
                   <h2>Four piles, different mistakes</h2>
+                  <p>
+                    The analyst sorts each tested request by two answers: what
+                    the model predicted and what actually happened. A false
+                    positive is a request selected as a likely sale that did not
+                    sell. A false negative is a sale the model missed. For the
+                    sales team, these suggest different concerns: spending
+                    effort on an unsuccessful request or overlooking an
+                    opportunity.
+                  </p>
                   <div className="cell-grid">
                     <div className="matrix-cell">
                       <b>{metrics.tp}</b>True positive
@@ -1128,6 +1187,14 @@ export default function Home() {
                 </section>
                 <section className="panel">
                   <h2>Threshold trade-off</h2>
+                  <p>
+                    Imagine the team asking for a shorter list of promising
+                    requests. Raising the threshold requires a higher share of
+                    sale votes before a row is selected. Lowering it lets more
+                    rows through. Watch the selected rows alongside precision
+                    and recall; a shorter list is not automatically a better
+                    one.
+                  </p>
                   <svg
                     viewBox="0 0 540 280"
                     aria-label="Precision in blue and recall in green as the threshold rises from 0 to 1"
@@ -1235,12 +1302,14 @@ export default function Home() {
               </section>
               <Note title="A better metric is not automatically more money">
                 <p>
-                  Lowering the cut-off usually selects more requests and can
-                  find more sales, at the cost of extra false positives. Staff
-                  time and margins may differ. F1 balances classification
-                  measures; it does not price those costs. Four examples make
-                  the mechanics visible but do not establish a reliable
-                  operating policy.
+                  Before choosing a working cut-off, the analyst would sit down
+                  with the sales team. How long does a quote take to prepare?
+                  How valuable is a missed sale? Precision asks how many
+                  selected requests really sold; recall asks how many actual
+                  sales were found. F1 combines those measures, but does not
+                  account for staff time or profit margins. These four examples
+                  let you see the decisions move; they are too few to establish
+                  a reliable policy for the business.
                 </p>
               </Note>
             </>
@@ -1252,6 +1321,12 @@ export default function Home() {
                   <label htmlFor="email-input">
                     <h2>Try an incoming message</h2>
                   </label>
+                  <p>
+                    The employee can read the message as a sentence. The matcher
+                    takes a simpler approach: break it into pieces and look for
+                    known part numbers. Edit the message or try the examples to
+                    see which pieces it recognizes.
+                  </p>
                   <textarea
                     id="email-input"
                     className="field-input"
@@ -1333,6 +1408,7 @@ export default function Home() {
               </div>
               <Grid
                 title="Proposed structured intake"
+                note="Each candidate part becomes a proposed row. Before this could join the customer and part tables from step 1, the employee needs to check that the identities are right. These rows are not yet model predictions."
                 rows={
                   parsed.found.length
                     ? parsed.found.map((p) => ({
@@ -1352,10 +1428,13 @@ export default function Home() {
               />
               <Note title="The matcher does not understand the request">
                 <p>
-                  Turn hyphen preservation off: AB-12-CD breaks into pieces and
-                  “12” can match incorrectly. “42” may be a street number or a
-                  genuine part. Excluding it fixes one false match but can hide
-                  a real request.
+                  Imagine the employee comparing the proposed table with the
+                  original email. With hyphen preservation off, AB-12-CD breaks
+                  into pieces and “12” can be mistaken for a requested part. The
+                  matcher can also mistake the street number “42” for a part.
+                  Try excluding it, then try the message where 42 really is the
+                  part number. A rule that fixes one message can damage another,
+                  which is why recognition still needs checking.
                 </p>
                 <p>
                   An unresolved account needs review, not an automatic no-sale.
@@ -1392,6 +1471,14 @@ export default function Home() {
               <div className="two-col">
                 <section className="panel">
                   <h2>Different denominators</h2>
+                  <p>
+                    When the analyst presents these figures to the sales team,
+                    the first question should be “a percentage of which group?”
+                    An email can contain several offered items, and the model
+                    selects only some items as likely sales. The bars below
+                    describe different groups, so they need to be read with
+                    their definitions.
+                  </p>
                   <Bars
                     max={100}
                     rows={[
@@ -1414,6 +1501,13 @@ export default function Home() {
                 </section>
                 <section className="panel">
                   <h2>Model selection, then tuning</h2>
+                  <p>
+                    The researchers first compared different kinds of models
+                    after selecting features. They then refined the Random
+                    Forest and chose its decision threshold. Read the first
+                    three bars as the comparison between model types, and the
+                    last as the forest’s later result.
+                  </p>
                   <Bars
                     max={60}
                     rows={[
@@ -1472,10 +1566,13 @@ export default function Home() {
                 <section className="panel">
                   <h2>What still needs evidence</h2>
                   <p>
-                    Unpursued RFQs lack labels. Order linkage is approximate.
-                    Stock history was reconstructed. Customer email mapping
-                    blocked full automation. New customers are outside the
-                    described model’s coverage.
+                    Before putting this into daily use, the team has unfinished
+                    work. Requests it never pursued have no sales labels to
+                    learn from. The analyst has linked orders approximately and
+                    reconstructed stock history, rather than observing perfect
+                    records. Mapping customer emails also blocked full
+                    automation, and the described model does not cover new
+                    customers. These gaps affect which requests it can judge.
                   </p>
                   <p>
                     Actual revenue, response-time improvement, fairness, and
