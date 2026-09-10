@@ -1,4 +1,4 @@
-# RFQ Data Journey
+# MBAN Case — RFQ Data Journey
 
 An educational web app based on Rohaan, Topan and Groothuis-Oudshoorn (2022), DOI 10.1016/j.eswa.2021.115925. Original article licensed CC BY 4.0. All displayed records are invented. Reported results are separated into the final lesson.
 
@@ -6,7 +6,18 @@ Eight lessons cover raw records, joins, cleaning, features, a working miniature 
 
 ## Run
 
-`npm install`, then `npm run dev`.
+Install Node.js 22.13 or newer, then run:
+
+```sh
+git clone https://github.com/kevintabora/mban-case.git
+cd mban-case
+npm ci
+npm run dev
+```
+
+Open the local URL printed in the terminal (normally http://localhost:3000). Keep the terminal running while using the app; press Ctrl+C to stop it. This React app needs a server, so there is no standalone `index.html` to double-click.
+
+The repository is public and contains the application source. Pushing it to GitHub does not automatically deploy a public website. The existing hosted app is at https://rfq-data-journey-kevin.kbtabora.chatgpt.site and may require its owner's ChatGPT sign-in.
 
 `npm run build` creates the production site. Implementation is React with semantic HTML, CSS, and client-side JavaScript compiled from TypeScript. No model API or external data service is required by the lessons. No uploads, personal data, or persistent user records are used.
 
